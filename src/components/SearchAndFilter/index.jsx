@@ -1,5 +1,7 @@
-import React from "react";
+/* eslint-disable react/prop-types */
 import { SearchAndFilterContainer } from "./styles";
+import { FaMagnifyingGlass } from "react-icons/fa6";
+
 
 export function SearchAndFilter({ onSearch, onFilterChange }) {
   const handleSearchChange = (e) => {
@@ -18,18 +20,22 @@ export function SearchAndFilter({ onSearch, onFilterChange }) {
           placeholder="Buscar por nome"
           onChange={handleSearchChange}
         />
-        <span className="search-icon">🔍</span>
+        <span className="search-icon">
+          <FaMagnifyingGlass />
+        </span>
       </div>
 
-      <select onChange={handleFilterChange} defaultValue="">
-        <option value="">Todos os tipos</option>
-        <option value="Fire">Fogo</option>
-        <option value="Water">Água</option>
-        <option value="Grass">Grama</option>
-        <option value="Electric">Elétrico</option>
-        <option value="Psychic">Psíquico</option>
-        {/* Adicione outros tipos de Pokémon aqui */}
-      </select>
+      <div className="select-container">
+         <p>Filtrar por:</p>
+        <select onChange={handleFilterChange} defaultValue="">
+          <option value=""></option>
+          <option value="Fire">Fogo</option>
+          <option value="Water">Água</option>
+          <option value="Grass">Grama</option>
+          <option value="Electric">Elétrico</option>
+          <option value="Psychic">Psíquico</option>
+        </select>
+      </div>
     </SearchAndFilterContainer>
   );
 }

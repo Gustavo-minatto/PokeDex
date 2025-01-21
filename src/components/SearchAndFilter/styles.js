@@ -7,8 +7,17 @@ export const SearchAndFilterContainer = styled.div`
   gap: 20px;
   margin-top: 20px;
 
+  flex-wrap: wrap;
+
+  .input-container {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    max-width: 300px;
+  }
+
   input {
-    width: 300px;
+    width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 20px;
@@ -18,7 +27,6 @@ export const SearchAndFilterContainer = styled.div`
     display: flex;
     align-items: center;
     padding-right: 40px;
-    position: relative;
   }
 
   input::placeholder {
@@ -26,18 +34,22 @@ export const SearchAndFilterContainer = styled.div`
     font-style: italic;
   }
 
-  .input-container {
-    position: relative;
-    display: inline-block;
-  }
-
   .search-icon {
     position: absolute;
     top: 50%;
-    right: 10px;
+    right: 15px;
     transform: translateY(-50%);
     color: #aaa;
     cursor: pointer;
+  }
+
+  .select-container{
+    display: flex;
+    align-items: center;
+  }
+  
+  p{
+    margin-right: 10px;
   }
 
   select {
@@ -46,5 +58,13 @@ export const SearchAndFilterContainer = styled.div`
     border-radius: 5px;
     font-size: 1.4rem;
     background-color: #e0e0e0;
+    width: 300px;
   }
+
+  @media (max-width: 768px) {
+    padding: 10px;
+    select{
+      width: 200px;
+    }
+  } 
 `;

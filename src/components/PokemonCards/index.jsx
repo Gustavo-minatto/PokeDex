@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { CardGrid, Pagination } from "./styles";
 import { Card } from "../../components/Card";
 import { SearchAndFilter } from "../../components/SearchAndFilter";
@@ -15,6 +15,7 @@ export function PokemonCards() {
 
   const fetchCards = async (pageNumber) => {
     try {
+      setLoading(true);
       const response = await axios.get(
         `https://api.pokemontcg.io/v2/cards?pageSize=20&page=${pageNumber}`,
         {
@@ -35,6 +36,7 @@ export function PokemonCards() {
 
   useEffect(() => {
     fetchCards(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }, [page]);
 
   const handleSearch = (term) => {
@@ -70,13 +72,18 @@ export function PokemonCards() {
     setCards(filteredCards);
   };
 
-
   const handleNextPage = () => {
-    if (page < totalPages) setPage(page + 1);
+    if (page < totalPages) {
+      setLoading(true);
+      setPage(page + 1);
+    }
   };
 
   const handlePrevPage = () => {
-    if (page > 1) setPage(page - 1);
+    if (page > 1) {
+      setLoading(true);
+      setPage(page - 1);
+    }
   };
 
   return (
@@ -100,11 +107,11 @@ export function PokemonCards() {
       </CardGrid>
 
       <Pagination>
-        <button onClick={handlePrevPage} disabled={page === 1}>
+        <button onClick={handlePrevPage} disabled={page === 1 || loading}>
           Anterior
         </button>
 
-        <button onClick={handleNextPage} disabled={page === totalPages}>
+        <button onClick={handleNextPage} disabled={page === totalPages || loading}>
           Próximo
         </button>
       </Pagination>
