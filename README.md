@@ -1,8 +1,5 @@
-# React + Vite
+Para rodar a aplicação
+npm install
+npm run dev
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Tem um erro nos filtros, quando for pesquisar algo, faça o Exemplo: Venusaur, apaga o r e depois pode pesquisar o que quiser, os 2 filtro não funciona junto, O mesmo erro acontece no select, coloca tipo agua, espera carregar depois pode ir pra qualquer tipo sem problemas 

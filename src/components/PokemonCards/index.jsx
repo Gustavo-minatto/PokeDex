@@ -40,7 +40,7 @@ export function PokemonCards() {
         setAllCards(sortedCards);
         setCards(sortedCards);
       } else {
-        setAllCards(sortedCards);
+        setAllCards([]);
         setCards(sortedCards);
         setTotalPages(Math.ceil(response.data.totalCount / 20));
       }
@@ -71,7 +71,6 @@ export function PokemonCards() {
     }
   };
 
-
   const handleFilterChange = (selectedFilter) => {
     setFilter(selectedFilter);
     setIsFiltered(selectedFilter !== "" || searchTerm !== "");
@@ -93,7 +92,6 @@ export function PokemonCards() {
       setCards(filteredCards);
     }
   };
-
 
   const handleNextPage = () => {
     if (page < totalPages) {

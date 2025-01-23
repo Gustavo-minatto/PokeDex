@@ -34,6 +34,9 @@ export function SearchAndFilter({ onSearch, onFilterChange }) {
           <option value="Grass">Grama</option>
           <option value="Lightning">Elétrico</option>
           <option value="Psychic">Psíquico</option>
+          <option value="Colorless">Normal</option>
+          <option value="Darkness">Escuridão</option>
+          <option value="Metal">Metal</option>
         </select>
       </div>
     </SearchAndFilterContainer>

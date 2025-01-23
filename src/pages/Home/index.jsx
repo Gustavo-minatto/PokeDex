@@ -6,7 +6,7 @@ export function Home() {
   return (
     <Container>
       <Header />
-      <PokemonCards /> 
-    </Container>  
+      <PokemonCards />
+    </Container>
   );
 }
