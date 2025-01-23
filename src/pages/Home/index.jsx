@@ -7,6 +7,6 @@ export function Home() {
     <Container>
       <Header />
       <PokemonCards /> 
-    </Container>
+    </Container>  
   );
 }

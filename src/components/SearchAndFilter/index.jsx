@@ -26,13 +26,13 @@ export function SearchAndFilter({ onSearch, onFilterChange }) {
       </div>
 
       <div className="select-container">
-         <p>Filtrar por:</p>
+        <p>Filtrar por:</p>
         <select onChange={handleFilterChange} defaultValue="">
           <option value=""></option>
           <option value="Fire">Fogo</option>
           <option value="Water">Água</option>
           <option value="Grass">Grama</option>
-          <option value="Electric">Elétrico</option>
+          <option value="Lightning">Elétrico</option>
           <option value="Psychic">Psíquico</option>
         </select>
       </div>

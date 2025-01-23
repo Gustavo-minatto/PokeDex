@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { CardGrid, Pagination } from "./styles";
 import { Card } from "../../components/Card";
 import { SearchAndFilter } from "../../components/SearchAndFilter";
+import { PokemonModal } from "../../components/PokemonModal";
 import axios from "axios";
 
 export function PokemonCards() {
@@ -12,21 +13,37 @@ export function PokemonCards() {
   const [totalPages, setTotalPages] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState("");
+  const [isFiltered, setIsFiltered] = useState(false);
 
-  const fetchCards = async (pageNumber) => {
+  const [selectedCard, setSelectedCard] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const fetchCards = async (pageNumber, loadAll = false) => {
     try {
       setLoading(true);
       const response = await axios.get(
-        `https://api.pokemontcg.io/v2/cards?pageSize=20&page=${pageNumber}`,
+        `https://api.pokemontcg.io/v2/cards?pageSize=${loadAll ? 1000 : 20}&page=${pageNumber}`,
         {
           headers: {
             "X-Api-Key": "YOUR_API_KEY_HERE",
           },
         }
       );
-      setAllCards(response.data.data);
-      setCards(response.data.data);
-      setTotalPages(Math.ceil(response.data.totalCount / 20));
+
+      const sortedCards = response.data.data.sort((a, b) => {
+        const aPokedex = a.nationalPokedexNumbers?.[0] || Infinity;
+        const bPokedex = b.nationalPokedexNumbers?.[0] || Infinity;
+        return aPokedex - bPokedex;
+      });
+
+      if (loadAll) {
+        setAllCards(sortedCards);
+        setCards(sortedCards);
+      } else {
+        setAllCards(sortedCards);
+        setCards(sortedCards);
+        setTotalPages(Math.ceil(response.data.totalCount / 20));
+      }
     } catch (error) {
       console.error("Erro ao buscar cartas:", error);
     } finally {
@@ -35,15 +52,17 @@ export function PokemonCards() {
   };
 
   useEffect(() => {
-    fetchCards(page);
+    fetchCards(page, isFiltered);
     window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [page]);
+  }, [page, isFiltered]);
 
   const handleSearch = (term) => {
     setSearchTerm(term);
+    setIsFiltered(term !== "" || filter !== "");
 
     if (term === "") {
-      setCards(allCards);
+      fetchCards(1, false);
+      setPage(1);
     } else {
       const filteredCards = allCards.filter((card) =>
         card.name.toLowerCase().includes(term.toLowerCase())
@@ -52,25 +71,29 @@ export function PokemonCards() {
     }
   };
 
+
   const handleFilterChange = (selectedFilter) => {
     setFilter(selectedFilter);
+    setIsFiltered(selectedFilter !== "" || searchTerm !== "");
 
-    let filteredCards = allCards;
-
-    if (selectedFilter !== "") {
-      filteredCards = filteredCards.filter((card) =>
+    if (selectedFilter === "") {
+      fetchCards(1, false);
+      setPage(1);
+    } else {
+      let filteredCards = allCards.filter((card) =>
         card.types && card.types.includes(selectedFilter)
       );
-    }
 
-    if (searchTerm !== "") {
-      filteredCards = filteredCards.filter((card) =>
-        card.name.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
+      if (searchTerm !== "") {
+        filteredCards = filteredCards.filter((card) =>
+          card.name.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+      }
 
-    setCards(filteredCards);
+      setCards(filteredCards);
+    }
   };
+
 
   const handleNextPage = () => {
     if (page < totalPages) {
@@ -84,6 +107,23 @@ export function PokemonCards() {
       setLoading(true);
       setPage(page - 1);
     }
+  };
+
+  const handleCardClick = (card) => {
+    setSelectedCard({
+      name: card.name,
+      image: card.images.large || card.images.small,
+      types: card.types,
+      level: card.level,
+      hp: card.hp,
+      subtypes: card.subtypes,
+      description: card.flavorText || card.text || "Descrição não disponível",
+    });
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
   };
 
   return (
@@ -101,20 +141,32 @@ export function PokemonCards() {
               title={card.name}
               types={card.types}
               rarity={card.rarity}
+              onClick={() => handleCardClick(card)}
+              pokedexNumber={card.nationalPokedexNumbers ? card.nationalPokedexNumbers[0] : null}
             />
           ))
         )}
       </CardGrid>
 
-      <Pagination>
-        <button onClick={handlePrevPage} disabled={page === 1 || loading}>
-          Anterior
-        </button>
+      {!isFiltered && (
+        <Pagination>
+          <button onClick={handlePrevPage} disabled={page === 1 || loading}>
+            Anterior
+          </button>
 
-        <button onClick={handleNextPage} disabled={page === totalPages || loading}>
-          Próximo
-        </button>
-      </Pagination>
+          <button onClick={handleNextPage} disabled={page === totalPages || loading}>
+            Próximo
+          </button>
+        </Pagination>
+      )}
+
+      {isModalOpen && (
+        <PokemonModal
+          isOpen={isModalOpen}
+          pokemon={selectedCard}
+          onClose={handleCloseModal}
+        />
+      )}
     </div>
   );
 }
